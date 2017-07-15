@@ -10,7 +10,7 @@ export default class extends Phaser.State {
 	}
 
 	preload() {
-		this.load.spritesheet("tiles", "assets/tiles.png", 8, 8)
+		this.load.spritesheet("tiles", "assets/tiles.png", config.size, config.size)
 	}
 
 	create() {
