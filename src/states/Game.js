@@ -45,14 +45,14 @@ export default class extends Phaser.State {
 	decreaseTime() {
 		this.time--;
 
-		if(this.time === 0){
+		if(this.time === 0) {
 			this.resetLevel();
 			game.state.start("GameOver");
 		}
 	}
 
 	resetLevel() {
-		this.tiles.map(function(tile){
+		this.tiles.map(function(tile) {
 			tile.destroy();
 		});
 
@@ -121,7 +121,7 @@ export default class extends Phaser.State {
 	}
 
 	tileLeft() {
-		return this.tiles.filter(function(tile){
+		return this.tiles.filter(function(tile) {
 			return tile.alive;
 		}).length;
 	}
@@ -129,7 +129,7 @@ export default class extends Phaser.State {
 	addTime(number) {
 		this.time += number;
 
-		let text = game.add.text(70, game.height - 5, this.text,  {
+		let text = game.add.text(70, game.height - 5, this.text, {
 			font: "50px Arial",
 			fill: (number) > 0 ? "#09c416" : "#f22121",
 			align: "center"
@@ -139,7 +139,7 @@ export default class extends Phaser.State {
 
 		text.text = (number > 0 ) ? "+"+number : number;
 
-		let tween = game.add.tween(text).to({alpha: 0, y: game.height - 25}, 1000, "Linear").start();
+		let tween = game.add.tween(text).to({alpha: 0, y: game.height - 25}, Phaser.Timer.SECOND, "Linear").start();
 		tween.onComplete.add(function() {text.destroy()});
 	}
 
