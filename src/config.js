@@ -1,4 +1,5 @@
 export default {
+	time: 45,
 	width: 1200,
 	height: 1000,
 	size: 8,

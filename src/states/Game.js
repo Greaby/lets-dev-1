@@ -6,7 +6,9 @@ export default class extends Phaser.State {
 
 	init() {
 		this.level = 8;
+		this.tiles = [];
 		this.selectedTiles = [];
+		this.time = config.time;
 	}
 
 	preload() {
@@ -15,9 +17,50 @@ export default class extends Phaser.State {
 
 	create() {
 		this.placeTiles();
+
+		this.scoreText = game.add.text(game.width - 25, 50, this.game.score, {
+			font: "50px Arial",
+			fill: "#ffffff",
+			align: "right"
+		});
+		this.scoreText.anchor.set(1, 0.5);
+
+		this.timeText = game.add.text(30, game.height - 5, this.game.score, {
+			font: "50px Arial",
+			fill: "#ffffff",
+			align: "center"
+		});
+		this.timeText.anchor.set(0, 1);
+
+		game.time.events.loop(Phaser.Timer.SECOND, this.decreaseTime, this);
 	}
 
 	render() {}
+
+	update() {
+		this.scoreText.text = this.game.score;
+		this.timeText.text = this.time;
+	}
+
+	decreaseTime() {
+		this.time--;
+
+		if(this.time === 0){
+			this.resetLevel();
+			game.state.start("GameOver");
+		}
+	}
+
+	resetLevel() {
+		this.tiles.map(function(tile){
+			tile.destroy();
+		});
+
+		this.tiles = [];
+		this.selectedTiles = [];
+
+		this.placeTiles();
+	}
 
 	placeTiles() {
 		const size = config.size * config.scale;
@@ -39,6 +82,8 @@ export default class extends Phaser.State {
 				tile.scale.x = config.scale;
 				tile.scale.y = config.scale;
 				tile.value = frames[j * cols + i];
+
+				this.tiles.push(tile);
 			}
 		}
 	}
@@ -58,11 +103,55 @@ export default class extends Phaser.State {
 		if(this.selectedTiles[0].value === this.selectedTiles[1].value) {
 			this.selectedTiles[0].destroy();
 			this.selectedTiles[1].destroy();
+
+			if(this.tileLeft() === 0) {
+				this.addTime(5);
+				this.addScore(this.level);
+				this.resetLevel();
+			} else {
+				this.addTime(2);
+				this.addScore(1);
+			}
+
 		} else {
 			this.selectedTiles[0].frame = config.hiddenFrame;
 			this.selectedTiles[1].frame = config.hiddenFrame;
 		}
 		this.selectedTiles = [];
+	}
+
+	tileLeft() {
+		return this.tiles.filter(function(tile){
+			return tile.alive;
+		}).length;
+	}
+
+	addTime(number) {
+		this.time += number;
+
+		let text = game.add.text(70, game.height - 5, this.text,  {
+			font: "50px Arial",
+			fill: (number) > 0 ? "#09c416" : "#f22121",
+			align: "center"
+		});
+		text.anchor.set(0, 1);
+		text.angle = -5;
+
+		text.text = (number > 0 ) ? "+"+number : number;
+
+		let tween = game.add.tween(text).to({alpha: 0, y: game.height - 25}, 1000, "Linear").start();
+		tween.onComplete.add(function() {text.destroy()});
+	}
+
+	addScore(number) {
+		this.game.score += number;
+
+		if(this.scoreText.animation)
+			this.scoreText.animation.stop();
+		this.scoreText.scale.x = 1;
+		this.scoreText.scale.y = 1;
+
+		this.scoreText.animation = game.add.tween(this.scoreText.scale).to({x: 1.3, y: 1.3}, 50, Phaser.Easing.Bounce.InOut, true, 0, 0, true)
 	}
 
 
