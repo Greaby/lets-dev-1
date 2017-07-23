@@ -11,9 +11,7 @@ export default class extends Phaser.State {
 		this.time = config.time;
 	}
 
-	preload() {
-		this.load.spritesheet("tiles", "assets/tiles.png", config.size, config.size);
-	}
+	preload() {}
 
 	create() {
 		this.placeTiles();
