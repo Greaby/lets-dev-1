@@ -1,11 +1,11 @@
 import Phaser from 'phaser';
 import config from '../config';
-import {shuffle} from '../utils';
+import {shuffle, bestSquare} from '../utils';
 
 export default class extends Phaser.State {
 
 	init() {
-		this.level = 8;
+		this.level = 1;
 		this.tiles = [];
 		this.selectedTiles = [];
 		this.time = config.time;
@@ -14,6 +14,9 @@ export default class extends Phaser.State {
 	preload() {}
 
 	create() {
+
+		this.background = game.add.tileSprite(0, 0, config.width, config.height, "background");
+
 		this.placeTiles();
 
 		this.scoreText = game.add.text(game.width - 25, 50, this.game.score, {
@@ -36,6 +39,10 @@ export default class extends Phaser.State {
 	render() {}
 
 	update() {
+
+		this.background.tilePosition.x += 0.2;
+		this.background.tilePosition.y += 0.3;
+
 		this.scoreText.text = this.game.score;
 		this.timeText.text = this.time;
 	}
@@ -44,12 +51,12 @@ export default class extends Phaser.State {
 		this.time--;
 
 		if(this.time === 0) {
-			this.resetLevel();
+			this.resetLevel(1);
 			game.state.start("GameOver");
 		}
 	}
 
-	resetLevel() {
+	resetLevel(level) {
 		this.tiles.map(function(tile) {
 			tile.destroy();
 		});
@@ -57,12 +64,18 @@ export default class extends Phaser.State {
 		this.tiles = [];
 		this.selectedTiles = [];
 
+		this.level = level;
+
 		this.placeTiles();
 	}
 
 	placeTiles() {
+
+		this.background.frame = Math.floor(Math.random() * 16 + 1);
+
+
 		const size = config.size * config.scale;
-		const [cols, rows] = [4,4];
+		const [cols, rows] = bestSquare(this.level * 2);
 
 		const leftSpace = (game.width - cols * size - (cols - 1) * config.spacing) / 2 + size / 2;
 		const topSpace = (game.height - rows * size - (rows - 1) * config.spacing) / 2 + size / 2;
@@ -105,7 +118,7 @@ export default class extends Phaser.State {
 			if(this.tileLeft() === 0) {
 				this.addTime(5);
 				this.addScore(this.level);
-				this.resetLevel();
+				this.resetLevel(this.level + 1);
 			} else {
 				this.addTime(2);
 				this.addScore(1);

@@ -14,3 +14,15 @@ export const testLocalStorage = () => {
 		return false;
 	}
 }
+
+
+export const bestSquare = (number) => {
+	const sqrt = Math.floor(Math.sqrt(number));
+
+	for (var row = sqrt; row >= 0; row--) {
+		const column = number / row;
+
+		if(column % 1 === 0)
+			return [column, row];
+	}
+}
