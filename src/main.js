@@ -8,21 +8,21 @@ import config from './config';
 import {testLocalStorage} from "./utils";
 
 class Game extends Phaser.Game {
-	constructor() {
-		super(config.width, config.height);
+    constructor() {
+        super(config.width, config.height);
 
-		this.score = 0;
-		this.best = 0;
+        this.score = 0;
+        this.best = 0;
 
-		this.localStorageAvailable = testLocalStorage();
+        this.localStorageAvailable = testLocalStorage();
 
-		if(this.localStorageAvailable)
-			this.best = localStorage.getItem("best") || 0;
+        if(this.localStorageAvailable)
+            this.best = localStorage.getItem("best") || 0;
 
-		this.state.add("GameOver", GameOverState, false);
-		this.state.add("Game", GameState, false);
-		this.state.add("Boot", BootState, true);
-	}
+        this.state.add("GameOver", GameOverState, false);
+        this.state.add("Game", GameState, false);
+        this.state.add("Boot", BootState, true);
+    }
 }
 
 window.game = new Game();

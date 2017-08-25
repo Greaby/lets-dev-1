@@ -24,7 +24,7 @@ Accédez au répertoire du repo clonné.
 
 Exécutez:
 
-```npm install``` 
+```npm install```
 
 
 ## 4. Exécutez le serveur de développement:
