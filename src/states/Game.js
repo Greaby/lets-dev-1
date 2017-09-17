@@ -16,6 +16,8 @@ export default class extends Phaser.State {
     create() {
 
         this.background = game.add.tileSprite(0, 0, config.width, config.height, "background");
+        this.background.tileScale.x = 8;
+        this.background.tileScale.y = 8;
 
         this.placeTiles();
 
@@ -40,8 +42,8 @@ export default class extends Phaser.State {
 
     update() {
 
-        this.background.tilePosition.x += 0.2;
-        this.background.tilePosition.y += 0.3;
+        this.background.tilePosition.x += 0.08;
+        this.background.tilePosition.y += 0.09;
 
         this.scoreText.text = this.game.score;
         this.timeText.text = this.time;

@@ -10,7 +10,7 @@ export default class extends Phaser.State {
         this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
         this.load.spritesheet("tiles", "assets/tiles.png", Config.size, Config.size);
-        this.load.spritesheet("background", "assets/background.png", 128, 128);
+        this.load.spritesheet("background", "assets/background.png", 16, 16);
 
         this.load.onLoadComplete.add(this.loadComplete, this);
 

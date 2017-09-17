@@ -9,7 +9,7 @@ import {testLocalStorage} from "./utils";
 
 class Game extends Phaser.Game {
     constructor() {
-        super(config.width, config.height);
+        super(config.width, config.height, Phaser.AUTO, '', null, false, false);
 
         this.score = 0;
         this.best = 0;
