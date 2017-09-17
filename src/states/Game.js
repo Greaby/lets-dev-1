@@ -94,6 +94,14 @@ export default class extends Phaser.State {
                 tile.scale.y = config.scale;
                 tile.value = frames[j * cols + i];
 
+                tile.flipTween = game.add.tween(tile.scale).to({x: 0, y: config.scale * 1.2}, 50, Phaser.Easing.Linear.None);
+                tile.flipTween.onComplete.add(function(){
+                    tile.frame = tile.value - tile.frame;
+                    tile.backFlipTween.start();
+                }, this);
+
+                tile.backFlipTween = game.add.tween(tile.scale).to({x: config.scale, y: config.scale}, 50, Phaser.Easing.Linear.None);
+
                 this.tiles.push(tile);
             }
         }
@@ -101,11 +109,15 @@ export default class extends Phaser.State {
 
     showTile(target) {
         if(this.selectedTiles.length < 2 && this.selectedTiles.indexOf(target) === -1) {
-            target.frame = target.value;
+
+
+            target.flipTween.start();
+
+
             this.selectedTiles.push(target);
 
             if(this.selectedTiles.length === 2) {
-                game.time.events.add(Phaser.Timer.SECOND / 4, this.checkTiles, this);
+                game.time.events.add(350, this.checkTiles, this);
             }
         }
     }
@@ -125,8 +137,8 @@ export default class extends Phaser.State {
             }
 
         } else {
-            this.selectedTiles[0].frame = config.hiddenFrame;
-            this.selectedTiles[1].frame = config.hiddenFrame;
+            this.selectedTiles[0].flipTween.start();
+            this.selectedTiles[1].flipTween.start();
         }
         this.selectedTiles = [];
     }
