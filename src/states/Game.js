@@ -14,8 +14,12 @@ export default class extends Phaser.State {
     preload() {}
 
     create() {
+        const w = this.world.width + 50 * 2;
+        const h = this.world.height + 50 * 2;
 
-        this.background = game.add.tileSprite(0, 0, config.width, config.height, "background");
+        this.world.setBounds(-50, -50, w, h);
+
+        this.background = game.add.tileSprite(-50, -50, w, h, "background");
         this.background.tileScale.x = 8;
         this.background.tileScale.y = 8;
 
@@ -85,10 +89,14 @@ export default class extends Phaser.State {
         let frames = config.playerFrames.slice(0, this.level);
         frames = frames.concat(frames);
 
+        while(cols * rows > frames.length) {
+            frames.push(config.mobFrames[1]);
+        }
+
         shuffle(frames);
 
-        for (var i = 0; i < cols; i++) {
-            for (var j = 0; j < rows; j++) {
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
                 let tile = game.add.button(leftSpace + i * (size + config.spacing), topSpace + j * (size + config.spacing), "tiles", this.showTile, this);
                 tile.anchor.setTo(0.5);
                 tile.smoothed = false;
@@ -112,9 +120,11 @@ export default class extends Phaser.State {
     showTile(target) {
         if(this.selectedTiles.length < 2 && this.selectedTiles.indexOf(target) === -1) {
 
+            if(target.value === config.mobFrames[1])
+                return this.zombie(target);
+
 
             target.flipTween.start();
-
 
             this.selectedTiles.push(target);
 
@@ -143,6 +153,31 @@ export default class extends Phaser.State {
             this.selectedTiles[1].flipTween.start();
         }
         this.selectedTiles = [];
+    }
+
+    zombie(target) {
+        if(!target.open) {
+            target.flipTween.start();
+            target.open = true;
+            target.attackEvent = game.time.events.loop(1500, this.attack, this);
+            target.life = 5;
+        } else {
+            target.animation = game.add.tween(target).to({angle:"-5"}, 50, Phaser.Easing.Bounce.InOut, true, 0, 0, true);
+            target.tint = "0xff0000";
+            game.time.events.add(60, function(target){
+                target.tint = "0xffffff"
+            }, this, target);
+            target.life--;
+            if(target.life <= 0) {
+                game.time.events.remove(target.attackEvent);
+                target.destroy();
+            }
+        }
+    }
+
+    attack() {
+        this.addTime(-3);
+        game.add.tween(game.camera).to({x: game.camera.x - 20}, 40, Phaser.Easing.Bounce.InOut, true, 0, 1, true);
     }
 
     tileLeft() {

@@ -19,10 +19,13 @@ export const testLocalStorage = () => {
 export const bestSquare = (number) => {
     const sqrt = Math.floor(Math.sqrt(number));
 
-    for (var row = sqrt; row >= 0; row--) {
+    for (let row = sqrt; row >= 0; row--) {
         const column = number / row;
 
         if(column % 1 === 0)
-            return [column, row];
+            if(Math.abs(column - row) > 2 )
+                return bestSquare(number + 1);
+            else
+                return [column, row];
     }
 }
