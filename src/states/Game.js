@@ -56,7 +56,13 @@ export default class extends Phaser.State {
     decreaseTime() {
         this.time--;
 
-        if(this.time === 0) {
+        if(this.time <= 5) {
+            game.sound.play("beep2", 0.3);
+        } else if(this.time <= 10) {
+            game.sound.play("beep", 0.3);
+        }
+
+        if(this.time <= 0) {
             this.resetLevel(1);
             game.state.start("GameOver");
         }
@@ -90,7 +96,7 @@ export default class extends Phaser.State {
         frames = frames.concat(frames);
 
         while(cols * rows > frames.length) {
-            frames.push(config.mobFrames[1]);
+            frames.push(config.mobFrames[Math.floor(Math.random() * config.mobFrames.length)]);
         }
 
         shuffle(frames);
@@ -119,6 +125,10 @@ export default class extends Phaser.State {
 
     showTile(target) {
         if(this.selectedTiles.length < 2 && this.selectedTiles.indexOf(target) === -1) {
+            game.sound.play('click');
+
+            if(target.value === config.mobFrames[0])
+                return this.creeper(target);
 
             if(target.value === config.mobFrames[1])
                 return this.zombie(target);
@@ -136,6 +146,8 @@ export default class extends Phaser.State {
 
     checkTiles(target) {
         if(this.selectedTiles[0].value === this.selectedTiles[1].value) {
+            game.sound.play('success', 0.3);
+
             this.selectedTiles[0].destroy();
             this.selectedTiles[1].destroy();
 
@@ -149,17 +161,59 @@ export default class extends Phaser.State {
             }
 
         } else {
+            game.sound.play('wrong', 0.3);
             this.selectedTiles[0].flipTween.start();
             this.selectedTiles[1].flipTween.start();
         }
         this.selectedTiles = [];
     }
 
+
+    creeper(target) {
+        target.bringToTop();
+        target.flipTween.start();
+
+        if(target.explode && !target.open) {
+            this.explode(target);
+        }
+        else if(!target.open) {
+            game.sound.play("creeper", 0.3);
+
+            target.animation = game.add.tween(target.scale).to({x: config.scale * 1.3, y: config.scale * 1.3}, 80, Phaser.Easing.Bounce.InOut, true, 0, 8, true);
+            target.open = true;
+            target.explode = true;
+            target.explodeEvent = game.time.events.add(Phaser.Timer.SECOND, this.explode, this, target);
+        }
+        else {
+            game.time.events.remove(target.explodeEvent);
+            target.open = false;
+
+            target.animation.stop();
+            target.scale.x = config.scale;
+            target.scale.y = config.scale;
+        }
+    }
+
+    explode(target) {
+        this.damage(-5);
+        target.destroy();
+
+        game.sound.play('explosion', 0.3);
+        let explosion = game.add.sprite(target.x, target.y, 'explosion');
+        explosion.scale.x = 4;
+        explosion.scale.y = 4;
+        explosion.anchor.x = 0.5;
+        explosion.anchor.y = 0.5;
+        let explode = explosion.animations.add('explode');
+        explode.killOnComplete = true;
+        explosion.animations.play('explode', 30);
+    }
+
     zombie(target) {
         if(!target.open) {
             target.flipTween.start();
             target.open = true;
-            target.attackEvent = game.time.events.loop(1500, this.attack, this);
+            target.attackEvent = game.time.events.loop(1500, this.damage, this, -3);
             target.life = 5;
         } else {
             target.animation = game.add.tween(target).to({angle:"-5"}, 50, Phaser.Easing.Bounce.InOut, true, 0, 0, true);
@@ -170,13 +224,17 @@ export default class extends Phaser.State {
             target.life--;
             if(target.life <= 0) {
                 game.time.events.remove(target.attackEvent);
+                game.sound.play('zombieDeath', 0.3);
                 target.destroy();
+            } else {
+                game.sound.play('zombie', 0.3);
             }
         }
     }
 
-    attack() {
-        this.addTime(-3);
+    damage(time) {
+        this.addTime(time);
+        game.sound.play('hit', 0.3);
         game.add.tween(game.camera).to({x: game.camera.x - 20}, 40, Phaser.Easing.Bounce.InOut, true, 0, 1, true);
     }
 
