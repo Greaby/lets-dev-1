@@ -240,7 +240,7 @@ export default class extends Phaser.State {
 
     tileLeft() {
         return this.tiles.filter(function(tile) {
-            return tile.alive;
+            return tile.alive && config.mobFrames.indexOf(tile.value) === -1;
         }).length;
     }
 
