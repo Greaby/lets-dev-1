@@ -69,6 +69,9 @@ export default class extends Phaser.State {
 
     resetLevel (level) {
         this.tiles.map(function (tile) {
+            if (tile.attackEvent) {
+                game.time.events.remove(tile.attackEvent)
+            }
             tile.destroy()
         })
 
@@ -107,17 +110,29 @@ export default class extends Phaser.State {
                 tile.scale.y = config.scale
                 tile.value = frames[j * cols + i]
 
-                tile.flipTween = game.add.tween(tile.scale).to({x: 0, y: config.scale * 1.2}, 50, Phaser.Easing.Linear.None)
-                tile.flipTween.onComplete.add(function () {
-                    tile.frame = tile.value - tile.frame
-                    tile.backFlipTween.start()
-                }, this)
-
-                tile.backFlipTween = game.add.tween(tile.scale).to({x: config.scale, y: config.scale}, 50, Phaser.Easing.Linear.None)
-
                 this.tiles.push(tile)
             }
         }
+    }
+
+    showTween(target) {
+        this.flipTween(target, target.value)
+    }
+
+    hideTween(target) {
+        this.flipTween(target, config.hiddenFrame)
+    }
+
+    flipTween(target, frame) {
+        let backFlipTween = game.add.tween(target.scale).to({x: config.scale, y: config.scale}, 50, Phaser.Easing.Linear.None)
+
+        let flipTween = game.add.tween(target.scale).to({x: 0, y: config.scale * 1.2}, 50, Phaser.Easing.Linear.None)
+        flipTween.onComplete.add(function () {
+            target.frame = frame
+            backFlipTween.start()
+        }, this)
+
+        flipTween.start()
     }
 
     showTile (target) {
@@ -132,7 +147,7 @@ export default class extends Phaser.State {
                 return this.zombie(target)
             }
 
-            target.flipTween.start()
+            this.showTween(target)
 
             this.selectedTiles.push(target)
 
@@ -159,19 +174,20 @@ export default class extends Phaser.State {
             }
         } else {
             game.sound.play('wrong', 0.3)
-            this.selectedTiles[0].flipTween.start()
-            this.selectedTiles[1].flipTween.start()
+            this.hideTween(this.selectedTiles[0])
+            this.hideTween(this.selectedTiles[1])
         }
         this.selectedTiles = []
     }
 
     creeper (target) {
         target.bringToTop()
-        target.flipTween.start()
+
 
         if (target.explode && !target.open) {
             this.explode(target)
         } else if (!target.open) {
+            this.showTween(target)
             game.sound.play('creeper', 0.3)
 
             target.animation = game.add.tween(target.scale).to({x: config.scale * 1.3, y: config.scale * 1.3}, 80, Phaser.Easing.Bounce.InOut, true, 0, 8, true)
@@ -179,6 +195,7 @@ export default class extends Phaser.State {
             target.explode = true
             target.explodeEvent = game.time.events.add(Phaser.Timer.SECOND, this.explode, this, target)
         } else {
+            this.hideTween(target)
             game.time.events.remove(target.explodeEvent)
             target.open = false
 
@@ -205,7 +222,7 @@ export default class extends Phaser.State {
 
     zombie (target) {
         if (!target.open) {
-            target.flipTween.start()
+            this.showTween(target)
             target.open = true
             target.attackEvent = game.time.events.loop(1500, this.damage, this, -3)
             target.life = 5
