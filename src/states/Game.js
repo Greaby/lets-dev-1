@@ -57,9 +57,9 @@ export default class extends Phaser.State {
         this.time--
 
         if (this.time <= 5) {
-            game.sound.play('beep2', 0.3)
+            game.sound.play('beep2', 0.2)
         } else if (this.time <= 10) {
-            game.sound.play('beep', 0.3)
+            game.sound.play('beep', 0.2)
         }
 
         if (this.time <= 0) {
