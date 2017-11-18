@@ -25,18 +25,19 @@ export default class extends Phaser.State {
 
         this.placeTiles()
 
-        this.scoreText = game.add.text(game.width - 25, 50, this.game.score, {
-            font: '50px Arial',
-            fill: '#ffffff',
-            align: 'right'
+        this.scoreText = game.add.text(game.width - 25, 80, this.game.score, {
+            font: '80px badabb',
+            fill: '#ffffff'
         })
+        this.scoreText.padding.set(10, 10);
         this.scoreText.anchor.set(1, 0.5)
 
         this.timeText = game.add.text(30, game.height - 5, this.game.score, {
-            font: '50px Arial',
+            font: '80px badabb',
             fill: '#ffffff',
             align: 'center'
         })
+        this.timeText.padding.set(10, 10);
         this.timeText.anchor.set(0, 1)
 
         game.time.events.loop(Phaser.Timer.SECOND, this.decreaseTime, this)
@@ -260,7 +261,7 @@ export default class extends Phaser.State {
         this.time += number
 
         let text = game.add.text(70, game.height - 5, this.text, {
-            font: '50px Arial',
+            font: '60px badabb',
             fill: (number) > 0 ? '#09c416' : '#f22121',
             align: 'center'
         })
