@@ -29,7 +29,7 @@ export default class extends Phaser.State {
             font: '80px badabb',
             fill: '#ffffff'
         })
-        this.scoreText.padding.set(10, 10);
+        this.scoreText.padding.set(10, 10)
         this.scoreText.anchor.set(1, 0.5)
 
         this.timeText = game.add.text(30, game.height - 5, this.game.score, {
@@ -37,7 +37,7 @@ export default class extends Phaser.State {
             fill: '#ffffff',
             align: 'center'
         })
-        this.timeText.padding.set(10, 10);
+        this.timeText.padding.set(10, 10)
         this.timeText.anchor.set(0, 1)
 
         game.time.events.loop(Phaser.Timer.SECOND, this.decreaseTime, this)
@@ -116,15 +116,15 @@ export default class extends Phaser.State {
         }
     }
 
-    showTween(target) {
+    showTween (target) {
         this.flipTween(target, target.value)
     }
 
-    hideTween(target) {
+    hideTween (target) {
         this.flipTween(target, config.hiddenFrame)
     }
 
-    flipTween(target, frame) {
+    flipTween (target, frame) {
         let backFlipTween = game.add.tween(target.scale).to({x: config.scale, y: config.scale}, 50, Phaser.Easing.Linear.None)
 
         let flipTween = game.add.tween(target.scale).to({x: 0, y: config.scale * 1.2}, 50, Phaser.Easing.Linear.None)
@@ -183,7 +183,6 @@ export default class extends Phaser.State {
 
     creeper (target) {
         target.bringToTop()
-
 
         if (target.explode && !target.open) {
             this.explode(target)

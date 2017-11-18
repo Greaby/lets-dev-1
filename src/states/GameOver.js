@@ -3,10 +3,7 @@ import Phaser from 'phaser'
 
 export default class extends Phaser.State {
     create () {
-        const w = this.world.width + 50 * 2
-        const h = this.world.height + 50 * 2
-
-        this.background = game.add.tileSprite(-50, -50, w, h, 'background')
+        this.background = game.add.tileSprite(0, 0, this.world.width, this.world.height, 'background')
         this.background.tileScale.x = 8
         this.background.tileScale.y = 8
         this.background.frame = Math.floor(Math.random() * 16 + 1)
@@ -23,14 +20,14 @@ export default class extends Phaser.State {
             font: '100px badabb',
             fill: '#ffffff'
         })
-        scoreText.padding.set(10, 10);
+        scoreText.padding.set(10, 10)
         scoreText.anchor.set(0.5, 0.5)
 
         let bestText = game.add.text(game.width / 2, game.height / 2 + 40, 'Meilleur score : ' + this.game.best, {
             font: '50px badabb',
             fill: '#ffffff'
         })
-        bestText.padding.set(10, 10);
+        bestText.padding.set(10, 10)
         bestText.anchor.set(0.5, 0.5)
     }
 
