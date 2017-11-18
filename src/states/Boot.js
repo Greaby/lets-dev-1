@@ -13,7 +13,8 @@ export default class extends Phaser.State {
         this.load.spritesheet('explosion', 'assets/explosion.png', 96, 96)
 
         this.load.image('team', 'assets/team.png')
-        this.load.image('btn-start', 'assets/btn-start.png')
+        this.load.spritesheet('play-btn', 'assets/play-btn.png', 300, 100)
+        this.load.spritesheet('replay-btn', 'assets/replay-btn.png', 300, 100)
         this.load.image('title', 'assets/title.png')
 
         this.load.audio('background', ['assets/background.mp3'])

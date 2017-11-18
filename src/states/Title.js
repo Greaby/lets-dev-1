@@ -19,7 +19,7 @@ export default class extends Phaser.State {
         let title = game.add.sprite(game.width / 2, 250, 'title')
         title.anchor.set(0.5)
 
-        let start = game.add.button(game.width / 2, game.height / 2 + 100, 'btn-start', this.startGame, this)
+        let start = game.add.button(game.width / 2, game.height / 2 + 100, 'play-btn', this.startGame, this, 0, 0, 1)
         start.anchor.set(0.5)
 
         let shadow = game.add.sprite(game.width / 2, game.height - 25, 'team')

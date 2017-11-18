@@ -16,19 +16,22 @@ export default class extends Phaser.State {
             localStorage.setItem('best', this.game.best)
         }
 
-        let scoreText = game.add.text(game.width / 2, game.height / 2 - 40, 'Score : ' + this.game.score, {
+        let scoreText = game.add.text(game.width / 2, game.height / 2 - 80, 'Score : ' + this.game.score, {
             font: '100px badabb',
             fill: '#ffffff'
         })
         scoreText.padding.set(10, 10)
         scoreText.anchor.set(0.5, 0.5)
 
-        let bestText = game.add.text(game.width / 2, game.height / 2 + 40, 'Meilleur score : ' + this.game.best, {
+        let bestText = game.add.text(game.width / 2, game.height / 2, 'Meilleur score : ' + this.game.best, {
             font: '50px badabb',
             fill: '#ffffff'
         })
-        bestText.padding.set(10, 10)
+        bestText.padding.set(100, 100)
         bestText.anchor.set(0.5, 0.5)
+
+        let replayBtn = game.add.button(game.width / 2, game.height / 2 + 150, 'replay-btn', this.restartGame, this, 1, 1, 0)
+        replayBtn.anchor.set(0.5)
     }
 
     render () {}
@@ -36,5 +39,9 @@ export default class extends Phaser.State {
     update () {
         this.background.tilePosition.x += 0.08
         this.background.tilePosition.y += 0.09
+    }
+
+    restartGame () {
+        game.state.start('Game')
     }
 }
