@@ -166,7 +166,7 @@ export default class extends Phaser.State {
             this.selectedTiles[1].destroy()
 
             if (this.tileLeft() === 0) {
-                this.addTime(5)
+                this.addTime(1 + this.level)
                 this.addScore(this.level)
                 this.resetLevel(this.level + 1)
             } else {
