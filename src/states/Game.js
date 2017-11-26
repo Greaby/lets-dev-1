@@ -270,7 +270,11 @@ export default class extends Phaser.State {
             } else {
                 game.sound.play('enderman', 0.3)
 
-                let randomTile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+                let tiles = this.tiles.filter(function (tile) {
+                    return tile.alive
+                })
+
+                let randomTile = tiles[Math.floor(Math.random() * tiles.length)]
 
                 if (randomTile !== target) {
                     let tempX = target.x
