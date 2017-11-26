@@ -301,7 +301,7 @@ export default class extends Phaser.State {
     addTime (number) {
         this.time += number
 
-        let text = game.add.text(70, game.height - 5, this.text, {
+        let text = game.add.text(95, game.height - 35, this.text, {
             font: '60px badabb',
             fill: (number) > 0 ? '#09c416' : '#f22121',
             align: 'center'
@@ -311,7 +311,7 @@ export default class extends Phaser.State {
 
         text.text = (number > 0) ? '+' + number : number
 
-        let tween = game.add.tween(text).to({alpha: 0, y: game.height - 25}, Phaser.Timer.SECOND, 'Linear').start()
+        let tween = game.add.tween(text).to({alpha: 0, y: game.height - 55}, Phaser.Timer.SECOND, 'Linear').start()
         tween.onComplete.add(function () {
             text.destroy()
         })
