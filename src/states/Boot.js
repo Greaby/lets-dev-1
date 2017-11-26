@@ -8,6 +8,8 @@ export default class extends Phaser.State {
         this.game.scale.pageAlignVertically = true
         this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
 
+        this.game.input.mouse.enabled = !this.game.device.mspointer
+
         this.load.spritesheet('tiles', 'assets/tiles.png', Config.size, Config.size)
         this.load.spritesheet('background', 'assets/background.png', 16, 16)
         this.load.spritesheet('explosion', 'assets/explosion.png', 96, 96)
