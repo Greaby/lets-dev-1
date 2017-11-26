@@ -272,7 +272,7 @@ export default class extends Phaser.State {
 
                 let randomTile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
 
-                if(randomTile !== target) {
+                if (randomTile !== target) {
                     let tempX = target.x
                     let tempY = target.y
 
@@ -281,7 +281,6 @@ export default class extends Phaser.State {
 
                     randomTile.x = tempX
                     randomTile.y = tempY
-
                 }
             }
         }
