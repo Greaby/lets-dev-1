@@ -5,6 +5,7 @@ import {shuffle, bestSquare} from '../utils'
 
 export default class extends Phaser.State {
     init () {
+        this.game.score = 0
         this.level = 1
         this.tiles = []
         this.selectedTiles = []
@@ -148,6 +149,10 @@ export default class extends Phaser.State {
                 return this.zombie(target)
             }
 
+            if (target.value === config.mobFrames[2]) {
+                return this.enderman(target)
+            }
+
             this.showTween(target)
 
             this.selectedTiles.push(target)
@@ -225,7 +230,7 @@ export default class extends Phaser.State {
             this.showTween(target)
             target.open = true
             target.attackEvent = game.time.events.loop(1500, this.damage, this, -3)
-            target.life = 5
+            target.life = 4 + Math.round(Math.random() * 4)
         } else {
             target.animation = game.add.tween(target).to({angle: '-5'}, 50, Phaser.Easing.Bounce.InOut, true, 0, 0, true)
             target.tint = '0xff0000'
@@ -240,6 +245,44 @@ export default class extends Phaser.State {
                 target.destroy()
             } else {
                 game.sound.play('zombie', 0.3)
+            }
+        }
+    }
+
+    enderman (target) {
+        if (!target.open) {
+            this.showTween(target)
+            target.open = true
+            target.attackEvent = game.time.events.loop(1500, this.damage, this, -3)
+            target.life = 4 + Math.round(Math.random() * 4)
+        } else {
+            target.animation = game.add.tween(target).to({angle: '-5'}, 50, Phaser.Easing.Bounce.InOut, true, 0, 0, true)
+            target.tint = '0xff0000'
+            game.time.events.add(60, function (target) {
+                target.tint = '0xffffff'
+            }, this, target)
+            target.life--
+
+            if (target.life <= 0) {
+                game.time.events.remove(target.attackEvent)
+                game.sound.play('endermanDeath', 0.3)
+                target.destroy()
+            } else {
+                game.sound.play('enderman', 0.3)
+
+                let randomTile = this.tiles[Math.floor(Math.random() * this.tiles.length)]
+
+                if(randomTile !== target) {
+                    let tempX = target.x
+                    let tempY = target.y
+
+                    target.x = randomTile.x
+                    target.y = randomTile.y
+
+                    randomTile.x = tempX
+                    randomTile.y = tempY
+
+                }
             }
         }
     }
